@@ -127,6 +127,8 @@ class FeedbackViewer
 
 ## #{header[:date]} - #{header[:cohort]}
 
+(found #{entries.count} responses out of #{header[:size]} expected)
+
 
 #{formatted_entries.join("\n\n---\n\n")}
 
@@ -134,6 +136,29 @@ MARKDOWN
     out
   end
 end
+
+class Mailer
+
+  def self.send_mail(args)
+      Mail.deliver do
+        delivery_method :smtp, 
+                        { address: "smtp.gmail.com", port: 587, 
+                          domain: 'devbootcamp.com',
+                          user_name: 'sherif@devbootcamp.com',
+                          password: PASSWORD,
+                          enable_starttls_auto: true}
+        from     'sherif@devbootcamp.com'
+        to       args[:to]
+        cc       'sf@devbootcamp.com, sherif@devbootcamp.com'
+        subject  args[:subject]
+        body     args[:body]
+        add_file args[:attach]
+      end
+  end
+end
+
+
+
 
 class Logger
   def self.log(before_msg, after_msg = ' done.')

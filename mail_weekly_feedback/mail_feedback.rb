@@ -7,12 +7,17 @@ require_relative '../lib/feedback'
 #
 ######################################################################
 
+MANUAL_DAY = nil
 WEEKLY_RETRO = "0Ag1udyiPyRNrdFBkcVFyNFlDUjlkZE9nbWY3a2h4MUE"
 # other spreadsheets here using their key from the URL
 #   for example: URL?key=0Ag1udyiPyRNrdFBkcVFyNFlDUjlkZE9nbWY3a2h4MUE
 
-time = Time.new
-date = "%s/%s" % [time.month, time.day]
+def date
+  return MANUAL_DAY unless MANUAL_DAY.nil?
+  time = Time.new
+  raise ArgumentError, "wrong day, dude." unless time.day == 5 #fridays
+  "%s/%s" % [time.month, time.day]
+end
 
 # first run.  yay!
 # reports = [{date: "3/8",  cohort: "Sea Lions",    teachers: %w[jeffrey shadi]}, 
@@ -22,12 +27,15 @@ date = "%s/%s" % [time.month, time.day]
 #            {date: "3/15", cohort: "Golden Bears", teachers: %w[brick zee]}]
 
 # this is real data
-reports = [{date: date, cohort: "Sea Lions",    teachers: %w[jesse shadi]},
-           {date: date, cohort: "Banana Slugs", teachers: %w[jeffrey anne]},
-           {date: date, cohort: "Golden Bears", teachers: %w[brick zee]}]
+reports = [
+           # {date: date, cohort: "Sea Lions",    size: 12, teachers: %w[jesse shadi]},
+           {date: date, cohort: "Banana Slugs", size: 16, teachers: %w[keith shadi]},
+           {date: date, cohort: "Golden Bears", size: 22, teachers: %w[jeffrey jared]},
+           {date: date, cohort: "Fiery Skippers", size: 21, teachers: %w[zee mike]},
+          ]
 
 # this is fake data
-reports = [{date: date,   cohort: "Sea Lions",    teachers: %w[sherif]}]
+# reports = [{date: date,   cohort: "Golden Bears",  size: 22, teachers: %w[sherif]}]
 
 
 mail_domain = '@devbootcamp.com'
@@ -38,7 +46,7 @@ feedback = Feedback.load_feedback_from_document(WEEKLY_RETRO)
 Logger.log("generating reports as markdown...\n", '') do
   reports.each do |r|
     # teachers = r.select{|k,v| k =~ /teachers/}.values
-    filename = r.select{|k,v| k !~ /teachers/}.values.reverse.join("_").gsub(/[\s\/]/,'_').downcase
+    filename = r.select{|k,v| k !~ /teachers|size/}.values.reverse.join("_").gsub(/[\s\/]/,'_').downcase
     content = FeedbackViewer.render(feedback.all(r), r)
     File.open("in/#{filename}.md", 'w') { |file| file.write(content) }
   end
@@ -55,23 +63,13 @@ Logger.log("\nmailing out reports\n", "\n\nall done. check your inbox") do
   reports.each do |r|
     
     teachers = r.select{|k,v| k =~ /teachers/}.values.flatten
-    filename = r.select{|k,v| k !~ /teachers/}.values.reverse.join("_").gsub(/[\s\/]/,'_').downcase
+    filename = r.select{|k,v| k !~ /teachers|size/}.values.reverse.join("_").gsub(/[\s\/]/,'_').downcase
 
     Logger.log("\tsending #{filename} to #{teachers.inspect}. ", 'sent.') do
-      Mail.deliver do
-        delivery_method :smtp, 
-                        { address: "smtp.gmail.com", port: 587, 
-                          domain: 'devbootcamp.com',
-                          user_name: 'sherif@devbootcamp.com',
-                          password: PASSWORD,
-                          enable_starttls_auto: true}
-        from    'sherif@devbootcamp.com'
-        to      teachers.map{|t| t + mail_domain}.join(',')
-        cc      'sf@devbootcamp.com, sherif@devbootcamp.com'
-        subject "feedback from #{r[:cohort]} on #{r[:date]}"
-        body    "the attached feedback is intended for #{teachers.join(' and ')}\n\neveryone is welcome to review it.\n\n#{mail_footer}"
-        add_file Dir.pwd + "/out/#{filename}.pdf"
-      end
+      Mailer.send_mail({to: teachers.map{|t| t + mail_domain}.join(','),
+                        subject: "feedback from #{r[:cohort]} on #{r[:date]}",
+                        body: "the attached feedback is intended for #{teachers.join(' and ')}\n\neveryone is welcome to review it.\n\n#{mail_footer}",
+                        attach: Dir.pwd + "/out/#{filename}.pdf"})
     end
   end
 
