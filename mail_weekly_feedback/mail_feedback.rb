@@ -28,18 +28,19 @@ end
 
 # this is real data
 reports = [
-           # {date: date, cohort: "Sea Lions",    size: 12, teachers: %w[jesse shadi]},
-           {date: date, cohort: "Banana Slugs", size: 16, teachers: %w[keith shadi]},
-           {date: date, cohort: "Golden Bears", size: 22, teachers: %w[jeffrey jared]},
+           {date: date, cohort: "Sea Lions",    size: 7, teachers: %w[myles]},
+           {date: date, cohort: "Banana Slugs", size: 14, teachers: %w[keith shadi]},
+           {date: date, cohort: "Golden Bears", size: 19, teachers: %w[jeffrey jared]},
            {date: date, cohort: "Fiery Skippers", size: 21, teachers: %w[zee mike]},
           ]
 
 # this is fake data
-# reports = [{date: date,   cohort: "Golden Bears",  size: 22, teachers: %w[sherif]}]
+# reports = [{date: date,   cohort: "Golden Bears",  size: 19, teachers: %w[sherif]}]
 
 
 mail_domain = '@devbootcamp.com'
-mail_footer = 'please note that the data in these reports is only as good as the data we have.  any student giving feedback with the wrong cohort has to be fixed in the original google spreadsheet.'
+mail_footer = ""
+mail_footer += "\n\n(please note that the data in these reports is only as good as the data we have.  i try to make sure to fix obvious errors in the raw data before sending these.  apologies in advance for mistakes.)"
 
 feedback = Feedback.load_feedback_from_document(WEEKLY_RETRO)
 

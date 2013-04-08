@@ -3,8 +3,8 @@ require 'open-uri'
 
 require_relative 'charts.rb'
 
-CHART_SIZE = '800x200'
-CHART_PROPERTIES = '8,2,35'
+CHART_SIZE = '900x200'
+CHART_PROPERTIES = '5,1,20'
 COLOR = {lime:   'a4c400', green:  '60a917', emerald: '008a0',
          teal:   '00aba9', cyan:   '1ba1e2', cobalt:  '0050ef',
          indigo: '6a00ff', violet: 'aa00ff', pink:    'f472d0',
@@ -15,9 +15,9 @@ COLOR = {lime:   'a4c400', green:  '60a917', emerald: '008a0',
 
 # ["fa6800", "a20025", "aa00ff"]
 
-CHART_COLORS = COLOR.values.sample(3)
+CHART_COLORS = COLOR.values.sample(4)
 
-CHART_COLORS = ["6a00ff","a20025","e3c800"]
+# CHART_COLORS = ["6a00ff","a20025","e3c800"]
 data =  {'question1' => 
           {'cohort1' => 
             {'3/8/2013'   => 0.78,

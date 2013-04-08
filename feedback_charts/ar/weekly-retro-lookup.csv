@@ -1,0 +1,29 @@
+Strongly Agree,4
+Agree,3
+Neutral,2
+Disagree,1
+Strongly Disagree,0
+,
+Way too structured (more freedom please),2
+A little more structure than I would like,1
+Optimal,0
+A little more loose than I would like,-1
+Way too loose (more structure please),-2
+,
+Too much coding,2
+A little more coding than I would like,1
+Just Right,0
+A little more talk than I would like,-1
+Too much talk,-2
+,
+Most of the time I felt held back,2
+A little more held back than left behind,1
+A good balance,0
+A little more left behind than held back,-1
+Most of the time I felt left behind,-2
+,
+Panic zone,1
+Learning-panic edge,0
+"Learning zone,",-1
+Comfort-learning edge,-2
+Comfort zone,-3

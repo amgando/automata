@@ -8,7 +8,7 @@ require "google_drive"
 require 'active_support/core_ext'
 
 begin
-  session = GoogleDrive.login("sherif@devbootcamp.com", 'sherif11')
+  session = GoogleDrive.login("sherif@devbootcamp.com", '')
 rescue GoogleDrive::AuthenticationError => error
   p error
   exit
@@ -61,7 +61,6 @@ class Response
   # end
 end
 
-__END__
 
 header = @raw_ws.rows[0]
 
